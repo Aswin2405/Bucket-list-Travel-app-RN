@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import CategoryChip from '../components/CategoryChip';
 import SuggestionCard from '../components/SuggestionCard';
 import ErrorState from '../components/ErrorState';
@@ -30,6 +31,8 @@ const MANUAL_CATEGORIES = CATEGORIES;
 const DEFAULT_TASKS = ['Research best places', 'Plan travel dates', 'Book flights', 'Book stay'];
 
 export default function AddToBucketListScreen({ navigation }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { addItem } = useBucketList();
   const showAlert = useAlert();
 
@@ -105,7 +108,7 @@ export default function AddToBucketListScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -195,39 +198,41 @@ export default function AddToBucketListScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  formCard: {
-    backgroundColor: colors.card,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-  },
-  formTitle: { fontSize: 15, fontWeight: '700', color: colors.textDark, marginBottom: spacing.sm },
-  input: {
-    backgroundColor: colors.chipBackground,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: colors.textDark,
-    marginBottom: spacing.sm,
-  },
-  multilineInput: { minHeight: 60, textAlignVertical: 'top' },
-  categoryLabel: { fontSize: 12, color: colors.textGray, marginBottom: spacing.sm },
-  manualChipRow: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: spacing.xs },
-  chipRow: { flexGrow: 0, marginBottom: spacing.md },
-  banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FCE4EA',
-    borderRadius: radius.md,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-  },
-  bannerTitleRow: { flexDirection: 'row', alignItems: 'center' },
-  bannerTitle: { fontSize: 15, fontWeight: '700', color: colors.textDark, marginRight: 6 },
-  bannerSubtitle: { fontSize: 12, color: colors.textGray, marginTop: 4 },
-  listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xl },
-  emptyText: { textAlign: 'center', color: colors.textGray, marginTop: spacing.lg },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    formCard: {
+      backgroundColor: colors.card,
+      borderRadius: radius.md,
+      padding: spacing.md,
+      marginBottom: spacing.md,
+    },
+    formTitle: { fontSize: 15, fontWeight: '700', color: colors.textDark, marginBottom: spacing.sm },
+    input: {
+      backgroundColor: colors.chipBackground,
+      borderRadius: radius.sm,
+      paddingHorizontal: spacing.md,
+      paddingVertical: 10,
+      fontSize: 14,
+      color: colors.textDark,
+      marginBottom: spacing.sm,
+    },
+    multilineInput: { minHeight: 60, textAlignVertical: 'top' },
+    categoryLabel: { fontSize: 12, color: colors.textGray, marginBottom: spacing.sm },
+    manualChipRow: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: spacing.xs },
+    chipRow: { flexGrow: 0, marginBottom: spacing.md },
+    banner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.chipBackground,
+      borderRadius: radius.md,
+      padding: spacing.md,
+      marginBottom: spacing.md,
+    },
+    bannerTitleRow: { flexDirection: 'row', alignItems: 'center' },
+    bannerTitle: { fontSize: 15, fontWeight: '700', color: colors.textDark, marginRight: 6 },
+    bannerSubtitle: { fontSize: 12, color: colors.textGray, marginTop: 4 },
+    listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xl },
+    emptyText: { textAlign: 'center', color: colors.textGray, marginTop: spacing.lg },
+  });
+}

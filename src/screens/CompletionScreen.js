@@ -2,8 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Share } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { spacing } from '../theme/theme';
 import PrimaryButton from '../components/PrimaryButton';
+
+// This celebration screen is intentionally always dark (festive, not tied to
+// the app's light/dark theme setting), so its colors are not theme-driven.
+const colors = { white: '#FFFFFF', gold: '#F5A623' };
 
 export default function CompletionScreen({ navigation, route }) {
   const title = route.params?.title || 'your goal';
@@ -13,7 +17,7 @@ export default function CompletionScreen({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View style={styles.center}>
         <View style={styles.badgeWrap}>
           <Ionicons name="ribbon" size={90} color={colors.gold} />

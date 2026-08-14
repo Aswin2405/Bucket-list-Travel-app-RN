@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import { useBucketList } from '../context/BucketListContext';
 import { useAlert } from '../context/AlertContext';
 import { getErrorMessage } from '../api/errors';
 import * as aiApi from '../api/aiApi';
 
 export default function PackingSection({ item }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { addPackingItems, togglePackingItem, deletePackingItem } = useBucketList();
   const showAlert = useAlert();
   const destination = item.location || item.title;
@@ -129,52 +132,54 @@ export default function PackingSection({ item }) {
   );
 }
 
-const styles = StyleSheet.create({
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
-  },
-  titleRow: { flexDirection: 'row', alignItems: 'center' },
-  sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
-  counter: { fontSize: 12, color: colors.textGray, fontWeight: '700' },
-  card: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
-  emptyText: { fontSize: 13, color: colors.textGray, lineHeight: 18, marginBottom: spacing.sm },
-  itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.xs },
-  itemMain: { flex: 1, flexDirection: 'row', alignItems: 'center' },
-  itemText: { fontSize: 14, color: colors.textDark, marginLeft: spacing.sm, flex: 1 },
-  itemTextDone: { color: colors.textGray, textDecorationLine: 'line-through' },
-  addRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.sm },
-  input: {
-    flex: 1,
-    backgroundColor: colors.chipBackground,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: colors.textDark,
-    marginRight: spacing.sm,
-  },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  disabled: { opacity: 0.6 },
-  aiButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.full,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  aiButtonText: { fontSize: 13, fontWeight: '700', color: colors.primary, marginLeft: 6 },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: spacing.lg,
+      marginBottom: spacing.sm,
+    },
+    titleRow: { flexDirection: 'row', alignItems: 'center' },
+    sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
+    counter: { fontSize: 12, color: colors.textGray, fontWeight: '700' },
+    card: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
+    emptyText: { fontSize: 13, color: colors.textGray, lineHeight: 18, marginBottom: spacing.sm },
+    itemRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.xs },
+    itemMain: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+    itemText: { fontSize: 14, color: colors.textDark, marginLeft: spacing.sm, flex: 1 },
+    itemTextDone: { color: colors.textGray, textDecorationLine: 'line-through' },
+    addRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.sm },
+    input: {
+      flex: 1,
+      backgroundColor: colors.chipBackground,
+      borderRadius: radius.sm,
+      paddingHorizontal: spacing.md,
+      paddingVertical: 10,
+      fontSize: 14,
+      color: colors.textDark,
+      marginRight: spacing.sm,
+    },
+    addButton: {
+      width: 40,
+      height: 40,
+      borderRadius: radius.sm,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    disabled: { opacity: 0.6 },
+    aiButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: radius.full,
+      borderWidth: 1,
+      borderColor: colors.primary,
+    },
+    aiButtonText: { fontSize: 13, fontWeight: '700', color: colors.primary, marginLeft: 6 },
+  });
+}

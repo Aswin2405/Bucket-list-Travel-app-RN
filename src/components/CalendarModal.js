@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const MONTHS = [
@@ -23,6 +24,8 @@ function todayISO() {
 }
 
 export default function CalendarModal({ visible, title, initialDate, minDate, onSelect, onClose }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const seed = initialDate || todayISO();
   const [seedY, seedM] = seed.split('-').map(Number);
   const [view, setView] = useState({ year: seedY, month: seedM - 1 });
@@ -114,57 +117,59 @@ export default function CalendarModal({ visible, title, initialDate, minDate, on
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(34,33,58,0.45)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.lg,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    shadowColor: colors.black,
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 10,
-  },
-  title: { fontSize: 16, fontWeight: '800', color: colors.textDark, textAlign: 'center', marginBottom: spacing.sm },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: spacing.sm,
-  },
-  navButton: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: colors.chipBackground,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  monthLabel: { fontSize: 15, fontWeight: '700', color: colors.textDark },
-  weekRow: { flexDirection: 'row', marginBottom: spacing.xs },
-  weekday: { flex: 1, textAlign: 'center', fontSize: 11, fontWeight: '700', color: colors.textGray },
-  grid: { flexDirection: 'row', flexWrap: 'wrap' },
-  cell: { width: `${100 / 7}%`, aspectRatio: 1, alignItems: 'center', justifyContent: 'center' },
-  dayCircle: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  daySelected: { backgroundColor: colors.primary },
-  dayText: { fontSize: 14, color: colors.textDark },
-  dayDisabled: { color: colors.border },
-  daySelectedText: { color: colors.white, fontWeight: '800' },
-  closeButton: { marginTop: spacing.sm, paddingVertical: spacing.sm, alignItems: 'center' },
-  closeText: { fontSize: 14, fontWeight: '700', color: colors.textGray },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: colors.overlay,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.lg,
+    },
+    card: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: colors.card,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      shadowColor: colors.black,
+      shadowOpacity: 0.2,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 10,
+    },
+    title: { fontSize: 16, fontWeight: '800', color: colors.textDark, textAlign: 'center', marginBottom: spacing.sm },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: spacing.sm,
+    },
+    navButton: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: colors.chipBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    monthLabel: { fontSize: 15, fontWeight: '700', color: colors.textDark },
+    weekRow: { flexDirection: 'row', marginBottom: spacing.xs },
+    weekday: { flex: 1, textAlign: 'center', fontSize: 11, fontWeight: '700', color: colors.textGray },
+    grid: { flexDirection: 'row', flexWrap: 'wrap' },
+    cell: { width: `${100 / 7}%`, aspectRatio: 1, alignItems: 'center', justifyContent: 'center' },
+    dayCircle: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    daySelected: { backgroundColor: colors.primary },
+    dayText: { fontSize: 14, color: colors.textDark },
+    dayDisabled: { color: colors.border },
+    daySelectedText: { color: colors.white, fontWeight: '800' },
+    closeButton: { marginTop: spacing.sm, paddingVertical: spacing.sm, alignItems: 'center' },
+    closeText: { fontSize: 14, fontWeight: '700', color: colors.textGray },
+  });
+}

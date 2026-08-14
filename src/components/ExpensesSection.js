@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import { useBucketList } from '../context/BucketListContext';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext';
@@ -9,6 +10,8 @@ import { getErrorMessage } from '../api/errors';
 import { formatMoney } from '../utils/format';
 
 export default function ExpensesSection({ item }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { addExpense, deleteExpense } = useBucketList();
   const { user } = useAuth();
   const showAlert = useAlert();
@@ -160,59 +163,61 @@ export default function ExpensesSection({ item }) {
   );
 }
 
-const styles = StyleSheet.create({
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
-  },
-  titleRow: { flexDirection: 'row', alignItems: 'center' },
-  sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
-  total: { fontSize: 15, fontWeight: '800', color: colors.textDark },
-  card: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
-  emptyText: { fontSize: 13, color: colors.textGray, lineHeight: 18, marginBottom: spacing.sm },
-  expenseRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.xs },
-  expenseDesc: { fontSize: 14, color: colors.textDark, fontWeight: '600' },
-  expensePayer: { fontSize: 11, color: colors.textGray, marginTop: 1 },
-  expenseAmount: { fontSize: 14, fontWeight: '700', color: colors.textDark },
-  addRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.sm },
-  input: {
-    backgroundColor: colors.chipBackground,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: colors.textDark,
-  },
-  descInput: { flex: 1, marginRight: spacing.sm },
-  amountInput: { width: 72, marginRight: spacing.sm, textAlign: 'right' },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  disabled: { opacity: 0.6 },
-  splitHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  splitTitle: { fontSize: 14, fontWeight: '700', color: colors.textDark },
-  splitPer: { fontSize: 13, fontWeight: '700', color: colors.primary },
-  memberRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.xs,
-  },
-  memberName: { fontSize: 13, color: colors.textDark, flex: 1 },
-  memberRight: { alignItems: 'flex-end' },
-  memberPaid: { fontSize: 11, color: colors.textGray },
-  memberStatus: { fontSize: 12, fontWeight: '700', marginTop: 1 },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: spacing.lg,
+      marginBottom: spacing.sm,
+    },
+    titleRow: { flexDirection: 'row', alignItems: 'center' },
+    sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
+    total: { fontSize: 15, fontWeight: '800', color: colors.textDark },
+    card: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
+    emptyText: { fontSize: 13, color: colors.textGray, lineHeight: 18, marginBottom: spacing.sm },
+    expenseRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.xs },
+    expenseDesc: { fontSize: 14, color: colors.textDark, fontWeight: '600' },
+    expensePayer: { fontSize: 11, color: colors.textGray, marginTop: 1 },
+    expenseAmount: { fontSize: 14, fontWeight: '700', color: colors.textDark },
+    addRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.sm },
+    input: {
+      backgroundColor: colors.chipBackground,
+      borderRadius: radius.sm,
+      paddingHorizontal: spacing.md,
+      paddingVertical: 10,
+      fontSize: 14,
+      color: colors.textDark,
+    },
+    descInput: { flex: 1, marginRight: spacing.sm },
+    amountInput: { width: 72, marginRight: spacing.sm, textAlign: 'right' },
+    addButton: {
+      width: 40,
+      height: 40,
+      borderRadius: radius.sm,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    disabled: { opacity: 0.6 },
+    splitHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: spacing.sm,
+    },
+    splitTitle: { fontSize: 14, fontWeight: '700', color: colors.textDark },
+    splitPer: { fontSize: 13, fontWeight: '700', color: colors.primary },
+    memberRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.xs,
+    },
+    memberName: { fontSize: 13, color: colors.textDark, flex: 1 },
+    memberRight: { alignItems: 'flex-end' },
+    memberPaid: { fontSize: 11, color: colors.textGray },
+    memberStatus: { fontSize: 12, fontWeight: '700', marginTop: 1 },
+  });
+}

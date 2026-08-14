@@ -6,19 +6,33 @@ import RootNavigator from './src/navigation/RootNavigator';
 import { BucketListProvider } from './src/context/BucketListContext';
 import { AuthProvider } from './src/context/AuthContext';
 import { AlertProvider } from './src/context/AlertContext';
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
+import ColdStartNotice from './src/components/ColdStartNotice';
+
+function AppContent() {
+  const { isDark } = useTheme();
+  return (
+    <>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <ColdStartNotice />
+      <RootNavigator />
+    </>
+  );
+}
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <AlertProvider>
-          <AuthProvider>
-            <BucketListProvider>
-              <StatusBar style="dark" />
-              <RootNavigator />
-            </BucketListProvider>
-          </AuthProvider>
-        </AlertProvider>
+        <ThemeProvider>
+          <AlertProvider>
+            <AuthProvider>
+              <BucketListProvider>
+                <AppContent />
+              </BucketListProvider>
+            </AuthProvider>
+          </AlertProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

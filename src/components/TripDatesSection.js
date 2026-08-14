@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import { useBucketList } from '../context/BucketListContext';
 import { useAlert } from '../context/AlertContext';
 import { getErrorMessage } from '../api/errors';
@@ -14,6 +15,8 @@ function todayISO() {
 }
 
 export default function TripDatesSection({ item }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { updateItem } = useBucketList();
   const showAlert = useAlert();
   const [picking, setPicking] = useState(null); // 'start' | 'end' | null
@@ -78,18 +81,20 @@ export default function TripDatesSection({ item }) {
   );
 }
 
-const styles = StyleSheet.create({
-  headerRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.lg, marginBottom: spacing.sm },
-  sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
-  saving: { fontSize: 11, color: colors.textGray, marginLeft: spacing.sm },
-  row: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm },
-  dateBox: {
-    flex: 1,
-    backgroundColor: colors.card,
-    borderRadius: radius.md,
-    padding: spacing.md,
-  },
-  dateLabel: { fontSize: 11, color: colors.textGray, marginBottom: 4, textTransform: 'uppercase', fontWeight: '700' },
-  dateValue: { fontSize: 14, fontWeight: '700', color: colors.textDark },
-  datePlaceholder: { color: colors.primary, fontWeight: '600' },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    headerRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.lg, marginBottom: spacing.sm },
+    sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
+    saving: { fontSize: 11, color: colors.textGray, marginLeft: spacing.sm },
+    row: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm },
+    dateBox: {
+      flex: 1,
+      backgroundColor: colors.card,
+      borderRadius: radius.md,
+      padding: spacing.md,
+    },
+    dateLabel: { fontSize: 11, color: colors.textGray, marginBottom: 4, textTransform: 'uppercase', fontWeight: '700' },
+    dateValue: { fontSize: 14, fontWeight: '700', color: colors.textDark },
+    datePlaceholder: { color: colors.primary, fontWeight: '600' },
+  });
+}

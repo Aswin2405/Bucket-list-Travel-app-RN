@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, spacing } from '../theme/theme';
+import { spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import ScreenHeader from '../components/ScreenHeader';
 import BucketListCard from '../components/BucketListCard';
 import { useBucketList } from '../context/BucketListContext';
 
 export default function AllBucketListScreen({ navigation }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { items, refresh } = useBucketList();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <ScreenHeader title={`Your Bucket List (${items.length})`} onBack={() => navigation.goBack()} />
 
       <FlatList
@@ -29,8 +32,10 @@ export default function AllBucketListScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  listContent: { padding: spacing.md, paddingBottom: spacing.xl },
-  emptyText: { textAlign: 'center', color: colors.textGray, marginTop: spacing.xl },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    listContent: { padding: spacing.md, paddingBottom: spacing.xl },
+    emptyText: { textAlign: 'center', color: colors.textGray, marginTop: spacing.xl },
+  });
+}

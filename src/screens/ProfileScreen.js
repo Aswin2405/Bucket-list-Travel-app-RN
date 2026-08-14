@@ -1,10 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import ProgressBar from '../components/ProgressBar';
 import { useBucketList } from '../context/BucketListContext';
 import { useAuth } from '../context/AuthContext';
@@ -45,6 +46,8 @@ function memberSinceLabel(iso) {
 }
 
 export default function ProfileScreen() {
+  const { colors, isDark, toggleTheme } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { items } = useBucketList();
   const { user, logout, updateAvatar } = useAuth();
   const showAlert = useAlert();
@@ -113,6 +116,16 @@ export default function ProfileScreen() {
 
   const avatarSource = user?.avatar ? { uri: user.avatar } : { uri: AVATAR_IMAGE };
 
+  const StatCard = ({ icon, value, label, color }) => (
+    <View style={styles.statCard}>
+      <View style={[styles.statIconWrap, { backgroundColor: `${color}1A` }]}>
+        <Ionicons name={icon} size={20} color={color} />
+      </View>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -179,19 +192,39 @@ export default function ProfileScreen() {
 
           <View style={styles.infoRow}>
             <View style={[styles.card, styles.infoCard]}>
-              <View style={[styles.infoIconWrap, { backgroundColor: '#FCE4EA' }]}>
+              <View style={[styles.infoIconWrap, { backgroundColor: `${colors.primary}1A` }]}>
                 <Ionicons name={favoriteCategory?.icon || 'compass-outline'} size={18} color={colors.primary} />
               </View>
               <Text style={styles.infoLabel}>Favorite Style</Text>
               <Text style={styles.infoValue} numberOfLines={1}>{favoriteCategory?.label || 'None yet'}</Text>
             </View>
             <View style={[styles.card, styles.infoCard]}>
-              <View style={[styles.infoIconWrap, { backgroundColor: '#FFF3DC' }]}>
+              <View style={[styles.infoIconWrap, { backgroundColor: `${colors.gold}1A` }]}>
                 <Ionicons name="wallet-outline" size={18} color={colors.gold} />
               </View>
               <Text style={styles.infoLabel}>Total Spent</Text>
               <Text style={styles.infoValue} numberOfLines={1}>{formatMoney(totalSpent)}</Text>
             </View>
+          </View>
+
+          <Text style={styles.sectionTitle}>Appearance</Text>
+          <View style={[styles.card, styles.settingCard]}>
+            <View style={styles.settingLeft}>
+              <View style={[styles.infoIconWrap, { backgroundColor: `${colors.primary}1A`, marginBottom: 0 }]}>
+                <Ionicons name={isDark ? 'moon' : 'sunny'} size={18} color={colors.primary} />
+              </View>
+              <View style={styles.settingTextWrap}>
+                <Text style={styles.settingLabel}>Dark Mode</Text>
+                <Text style={styles.settingHint}>{isDark ? 'On' : 'Off'}</Text>
+              </View>
+            </View>
+            <Switch
+              value={isDark}
+              onValueChange={toggleTheme}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              thumbColor={colors.white}
+              ios_backgroundColor={colors.border}
+            />
           </View>
 
           <TouchableOpacity style={styles.logoutButton} onPress={logout} activeOpacity={0.7}>
@@ -204,19 +237,8 @@ export default function ProfileScreen() {
   );
 }
 
-function StatCard({ icon, value, label, color }) {
-  return (
-    <View style={styles.statCard}>
-      <View style={[styles.statIconWrap, { backgroundColor: `${color}1A` }]}>
-        <Ionicons name={icon} size={20} color={color} />
-      </View>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+function createStyles(colors) {
+  return StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   scrollContent: { paddingBottom: spacing.xl },
   hero: {
@@ -305,6 +327,16 @@ const styles = StyleSheet.create({
   infoIconWrap: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.xs },
   infoLabel: { fontSize: 11, color: colors.textGray },
   infoValue: { fontSize: 15, fontWeight: '800', color: colors.textDark, marginTop: 2 },
+  settingCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.lg,
+  },
+  settingLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  settingTextWrap: { marginLeft: spacing.sm },
+  settingLabel: { fontSize: 14, fontWeight: '700', color: colors.textDark },
+  settingHint: { fontSize: 11, color: colors.textGray, marginTop: 1 },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -312,4 +344,5 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   logoutText: { fontSize: 14, fontWeight: '700', color: colors.primary, marginLeft: spacing.xs },
-});
+  });
+}

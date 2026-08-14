@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 
 const AVATAR_IMAGE = 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&q=80';
@@ -16,6 +17,8 @@ const MENU_ITEMS = [
 
 export default function DrawerContent(props) {
   const { navigation } = props;
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { user, logout } = useAuth();
 
   const goToTab = (tabName) => {
@@ -47,19 +50,21 @@ export default function DrawerContent(props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  header: { padding: spacing.lg, borderBottomWidth: 1, borderBottomColor: colors.border, marginBottom: spacing.sm },
-  avatar: { width: 56, height: 56, borderRadius: 28, marginBottom: spacing.sm },
-  title: { fontSize: 18, fontWeight: '800', color: colors.textDark },
-  subtitle: { fontSize: 12, color: colors.textGray, marginTop: 2 },
-  menu: { paddingHorizontal: spacing.sm },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.sm,
-    borderRadius: radius.sm,
-  },
-  menuLabel: { fontSize: 15, color: colors.textDark, marginLeft: spacing.md, fontWeight: '600' },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    header: { padding: spacing.lg, borderBottomWidth: 1, borderBottomColor: colors.border, marginBottom: spacing.sm },
+    avatar: { width: 56, height: 56, borderRadius: 28, marginBottom: spacing.sm },
+    title: { fontSize: 18, fontWeight: '800', color: colors.textDark },
+    subtitle: { fontSize: 12, color: colors.textGray, marginTop: 2 },
+    menu: { paddingHorizontal: spacing.sm },
+    menuItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: spacing.md,
+      paddingHorizontal: spacing.sm,
+      borderRadius: radius.sm,
+    },
+    menuLabel: { fontSize: 15, color: colors.textDark, marginLeft: spacing.md, fontWeight: '600' },
+  });
+}

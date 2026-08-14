@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 
 export default function PrimaryButton({ title, onPress, loading, disabled, style }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   return (
     <TouchableOpacity
       style={[styles.button, disabled && styles.disabled, style]}
@@ -15,14 +18,16 @@ export default function PrimaryButton({ title, onPress, loading, disabled, style
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.full,
-    paddingVertical: spacing.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  disabled: { opacity: 0.6 },
-  text: { color: colors.white, fontSize: 16, fontWeight: '700' },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    button: {
+      backgroundColor: colors.primary,
+      borderRadius: radius.full,
+      paddingVertical: spacing.md,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    disabled: { opacity: 0.6 },
+    text: { color: colors.white, fontSize: 16, fontWeight: '700' },
+  });
+}

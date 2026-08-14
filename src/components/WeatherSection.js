@@ -1,12 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import { getErrorMessage } from '../api/errors';
 import { formatWeekdayDate } from '../utils/format';
 import * as weatherApi from '../api/weatherApi';
 
 export default function WeatherSection({ item }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const destination = item.location || item.title;
   const { startDate, endDate } = item;
   const hasDates = !!startDate && !!endDate;
@@ -95,34 +98,36 @@ export default function WeatherSection({ item }) {
   );
 }
 
-const styles = StyleSheet.create({
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
-  },
-  titleRow: { flexDirection: 'row', alignItems: 'center' },
-  sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
-  infoCard: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
-  mutedText: { fontSize: 13, color: colors.textGray, lineHeight: 18 },
-  retryLink: { marginTop: spacing.sm },
-  retryText: { fontSize: 13, color: colors.primary, fontWeight: '700' },
-  locationNote: { fontSize: 12, color: colors.textGray, marginBottom: spacing.sm },
-  daysRow: { paddingBottom: spacing.xs },
-  dayCard: {
-    width: 104,
-    backgroundColor: colors.card,
-    borderRadius: radius.md,
-    padding: spacing.sm,
-    marginRight: spacing.sm,
-    alignItems: 'center',
-  },
-  dayDate: { fontSize: 12, fontWeight: '700', color: colors.textDark },
-  dayTemp: { fontSize: 15, fontWeight: '800', color: colors.textDark },
-  dayTempMin: { fontSize: 12, fontWeight: '600', color: colors.textGray },
-  dayDesc: { fontSize: 11, color: colors.textGray, textAlign: 'center', marginTop: 2, minHeight: 28 },
-  precipRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-  precipText: { fontSize: 10, color: colors.textGray, marginLeft: 2 },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: spacing.lg,
+      marginBottom: spacing.sm,
+    },
+    titleRow: { flexDirection: 'row', alignItems: 'center' },
+    sectionTitle: { fontSize: 17, fontWeight: '700', color: colors.textDark },
+    infoCard: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
+    mutedText: { fontSize: 13, color: colors.textGray, lineHeight: 18 },
+    retryLink: { marginTop: spacing.sm },
+    retryText: { fontSize: 13, color: colors.primary, fontWeight: '700' },
+    locationNote: { fontSize: 12, color: colors.textGray, marginBottom: spacing.sm },
+    daysRow: { paddingBottom: spacing.xs },
+    dayCard: {
+      width: 104,
+      backgroundColor: colors.card,
+      borderRadius: radius.md,
+      padding: spacing.sm,
+      marginRight: spacing.sm,
+      alignItems: 'center',
+    },
+    dayDate: { fontSize: 12, fontWeight: '700', color: colors.textDark },
+    dayTemp: { fontSize: 15, fontWeight: '800', color: colors.textDark },
+    dayTempMin: { fontSize: 12, fontWeight: '600', color: colors.textGray },
+    dayDesc: { fontSize: 11, color: colors.textGray, textAlign: 'center', marginTop: 2, minHeight: 28 },
+    precipRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
+    precipText: { fontSize: 10, color: colors.textGray, marginLeft: 2 },
+  });
+}

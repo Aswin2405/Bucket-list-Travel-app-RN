@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import ScreenHeader from '../components/ScreenHeader';
 import CategoryChip from '../components/CategoryChip';
 import ErrorState from '../components/ErrorState';
@@ -12,6 +13,8 @@ import * as aiApi from '../api/aiApi';
 const EXPLORE_CATEGORIES = ['Popular', ...CATEGORIES.filter((c) => c.key !== 'popular').map((c) => c.label)];
 
 export default function ExploreScreen({ navigation }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [category, setCategory] = useState('Popular');
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -87,13 +90,15 @@ export default function ExploreScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  chipRow: { flexGrow: 0, marginVertical: spacing.md },
-  listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xl, gap: spacing.sm },
-  card: { flex: 1, backgroundColor: colors.card, borderRadius: radius.md, overflow: 'hidden', marginBottom: spacing.sm },
-  image: { width: '100%', height: 100 },
-  cardBody: { padding: spacing.sm },
-  name: { fontSize: 13, fontWeight: '700', color: colors.textDark, marginBottom: 2 },
-  description: { fontSize: 11, color: colors.textGray },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    chipRow: { flexGrow: 0, marginVertical: spacing.md },
+    listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xl, gap: spacing.sm },
+    card: { flex: 1, backgroundColor: colors.card, borderRadius: radius.md, overflow: 'hidden', marginBottom: spacing.sm },
+    image: { width: '100%', height: 100 },
+    cardBody: { padding: spacing.sm },
+    name: { fontSize: 13, fontWeight: '700', color: colors.textDark, marginBottom: 2 },
+    description: { fontSize: 11, color: colors.textGray },
+  });
+}

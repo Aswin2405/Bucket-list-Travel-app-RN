@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "frontend",
+    "name": "Wanderwish",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/app-logo.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aswin2405.frontend"
@@ -13,9 +13,9 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/app-logo.png",
+        "backgroundImage": "./assets/app-logo.png",
+        "monochromeImage": "./assets/app-logo.png"
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
@@ -23,7 +23,7 @@
       "package": "com.aswin2405.frontend"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/app-logo.png"
     },
     "plugins": [
       [
@@ -39,7 +39,13 @@
           "resizeMode": "cover",
           "backgroundColor": "#FDF3EF"
         }
-      ]
-    ]
+      ],
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8bdc802f-29cc-4fa6-adbb-26d8c96d3e7d"
+      }
+    }
   }
 }

@@ -12,7 +12,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import ProgressRing from '../components/ProgressRing';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorState from '../components/ErrorState';
@@ -41,6 +42,8 @@ const TRAVEL_MODES = [
 ];
 
 export default function ActivityDetailScreen({ navigation, route }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const { id } = route.params;
   const { items, toggleTask, completeItem, shareItem, unshareItem } = useBucketList();
   const { user } = useAuth();
@@ -158,7 +161,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View style={styles.heroWrap}>
         <Image source={{ uri: item.image }} style={styles.hero} />
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -408,7 +411,8 @@ export default function ActivityDetailScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors) {
+  return StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   centered: { flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
   heroWrap: { height: 260 },
@@ -548,4 +552,5 @@ const styles = StyleSheet.create({
   },
   stayPrice: { fontSize: 13, fontWeight: '700', color: colors.textDark, marginBottom: 2 },
   footer: { padding: spacing.md },
-});
+  });
+}

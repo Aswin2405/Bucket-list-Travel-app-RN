@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import CategoryChip from '../components/CategoryChip';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorState from '../components/ErrorState';
@@ -21,6 +22,8 @@ const TABS = [
 const DEFAULT_TASKS = ['Research best places', 'Plan travel dates', 'Book flights', 'Book stay'];
 
 export default function AITravelInsightsScreen({ navigation, route }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const destination = route.params?.destination || 'Goa, India';
   const { addItem } = useBucketList();
   const showAlert = useAlert();
@@ -66,7 +69,7 @@ export default function AITravelInsightsScreen({ navigation, route }) {
   const activeItems = insights?.[activeTab] || [];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <ScreenHeader title="AI Travel Insights" onBack={() => navigation.goBack()} rightIcon="sparkles" />
 
       {loading && (
@@ -127,37 +130,39 @@ export default function AITravelInsightsScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  centered: { flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
-  scrollContent: { padding: spacing.md, paddingBottom: spacing.xl },
-  heroWrap: { borderRadius: radius.lg, overflow: 'hidden', marginBottom: spacing.md },
-  hero: { width: '100%', height: 200 },
-  heartButton: {
-    position: 'absolute',
-    top: spacing.sm,
-    right: spacing.sm,
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heroOverlay: { position: 'absolute', bottom: spacing.sm, left: spacing.sm },
-  heroTitle: { fontSize: 22, fontWeight: '700', color: colors.white },
-  description: { fontSize: 13, color: colors.textGray, marginBottom: spacing.md, lineHeight: 19 },
-  tabRow: { flexDirection: 'row', marginBottom: spacing.md },
-  placeCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.card,
-    borderRadius: radius.md,
-    padding: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  placeImage: { width: 56, height: 56, borderRadius: radius.sm, marginRight: spacing.sm },
-  placeTitle: { fontSize: 14, fontWeight: '700', color: colors.textDark, marginBottom: 2 },
-  placeDescription: { fontSize: 12, color: colors.textGray },
-  footer: { padding: spacing.md, backgroundColor: colors.background },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    centered: { flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
+    scrollContent: { padding: spacing.md, paddingBottom: spacing.xl },
+    heroWrap: { borderRadius: radius.lg, overflow: 'hidden', marginBottom: spacing.md },
+    hero: { width: '100%', height: 200 },
+    heartButton: {
+      position: 'absolute',
+      top: spacing.sm,
+      right: spacing.sm,
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: colors.white,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    heroOverlay: { position: 'absolute', bottom: spacing.sm, left: spacing.sm },
+    heroTitle: { fontSize: 22, fontWeight: '700', color: colors.white },
+    description: { fontSize: 13, color: colors.textGray, marginBottom: spacing.md, lineHeight: 19 },
+    tabRow: { flexDirection: 'row', marginBottom: spacing.md },
+    placeCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.card,
+      borderRadius: radius.md,
+      padding: spacing.sm,
+      marginBottom: spacing.sm,
+    },
+    placeImage: { width: 56, height: 56, borderRadius: radius.sm, marginRight: spacing.sm },
+    placeTitle: { fontSize: 14, fontWeight: '700', color: colors.textDark, marginBottom: 2 },
+    placeDescription: { fontSize: 12, color: colors.textGray },
+    footer: { padding: spacing.md, backgroundColor: colors.background },
+  });
+}

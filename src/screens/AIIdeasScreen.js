@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme/theme';
+import { radius, spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 import PrimaryButton from '../components/PrimaryButton';
 import ErrorState from '../components/ErrorState';
 import ScreenHeader from '../components/ScreenHeader';
@@ -20,6 +21,8 @@ function iconForStyle(text) {
 }
 
 export default function AIIdeasScreen({ navigation }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const showAlert = useAlert();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -123,24 +126,26 @@ export default function AIIdeasScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  centered: { flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
-  scrollContent: { padding: spacing.md, paddingBottom: spacing.xl },
-  title: { fontSize: 18, fontWeight: '800', color: colors.textDark },
-  subtitle: { fontSize: 12, color: colors.textGray, marginTop: 4, marginBottom: spacing.md },
-  cardsGrid: { gap: spacing.sm, marginBottom: spacing.md },
-  card: { backgroundColor: colors.card, borderRadius: radius.md, overflow: 'hidden', marginBottom: spacing.sm },
-  cardImage: { width: '100%', height: 120 },
-  cardBody: { padding: spacing.sm },
-  cardTitle: { fontSize: 14, fontWeight: '700', color: colors.textDark, marginBottom: 2 },
-  cardDescription: { fontSize: 12, color: colors.textGray, marginBottom: spacing.sm },
-  tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  tag: { backgroundColor: colors.chipBackground, paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.full },
-  tagText: { fontSize: 10, color: colors.primary, fontWeight: '700' },
-  styleCard: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md },
-  styleTitle: { fontSize: 15, fontWeight: '700', color: colors.textDark, marginBottom: spacing.sm },
-  styleRow: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm },
-  styleText: { fontSize: 13, color: colors.textDark, marginLeft: spacing.sm },
-  surpriseHint: { fontSize: 12, color: colors.textGray, textAlign: 'center', marginVertical: spacing.sm },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    centered: { flex: 1, backgroundColor: colors.background, alignItems: 'center', justifyContent: 'center' },
+    scrollContent: { padding: spacing.md, paddingBottom: spacing.xl },
+    title: { fontSize: 18, fontWeight: '800', color: colors.textDark },
+    subtitle: { fontSize: 12, color: colors.textGray, marginTop: 4, marginBottom: spacing.md },
+    cardsGrid: { gap: spacing.sm, marginBottom: spacing.md },
+    card: { backgroundColor: colors.card, borderRadius: radius.md, overflow: 'hidden', marginBottom: spacing.sm },
+    cardImage: { width: '100%', height: 120 },
+    cardBody: { padding: spacing.sm },
+    cardTitle: { fontSize: 14, fontWeight: '700', color: colors.textDark, marginBottom: 2 },
+    cardDescription: { fontSize: 12, color: colors.textGray, marginBottom: spacing.sm },
+    tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+    tag: { backgroundColor: colors.chipBackground, paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.full },
+    tagText: { fontSize: 10, color: colors.primary, fontWeight: '700' },
+    styleCard: { backgroundColor: colors.card, borderRadius: radius.md, padding: spacing.md },
+    styleTitle: { fontSize: 15, fontWeight: '700', color: colors.textDark, marginBottom: spacing.sm },
+    styleRow: { flexDirection: 'row', alignItems: 'center', marginBottom: spacing.sm },
+    styleText: { fontSize: 13, color: colors.textDark, marginLeft: spacing.sm },
+    surpriseHint: { fontSize: 12, color: colors.textGray, textAlign: 'center', marginVertical: spacing.sm },
+  });
+}

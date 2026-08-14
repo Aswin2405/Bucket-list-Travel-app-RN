@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing } from '../theme/theme';
+import { spacing } from '../theme/theme';
+import { useTheme } from '../context/ThemeContext';
 
 export default function ScreenHeader({ title, onBack, rightIcon, onRightPress, rightElement }) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const showRight = rightElement || rightIcon;
 
   return (
@@ -36,25 +39,27 @@ export default function ScreenHeader({ title, onBack, rightIcon, onRightPress, r
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    backgroundColor: colors.background,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  side: { width: 36, alignItems: 'flex-start' },
-  rightSide: { alignItems: 'flex-end' },
-  iconButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.chipBackground,
-  },
-  title: { flex: 1, textAlign: 'center', fontSize: 17, fontWeight: '700', color: colors.textDark },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      backgroundColor: colors.background,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    side: { width: 36, alignItems: 'flex-start' },
+    rightSide: { alignItems: 'flex-end' },
+    iconButton: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.chipBackground,
+    },
+    title: { flex: 1, textAlign: 'center', fontSize: 17, fontWeight: '700', color: colors.textDark },
+  });
+}
